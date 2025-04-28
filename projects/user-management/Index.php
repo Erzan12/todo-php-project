@@ -44,8 +44,8 @@ $user = $user->read();
 
     <h2>Create User</h2>
     <form method="POST">
-        <input type="text" name="name" placeholder="Name" required>
-        <input type="email" name="email" placeholder="Email" required>
+        <input type="text" name="name" placeholder="Name" >
+        <input type="email" name="email" placeholder="Email">
         <button type="submit" name="create">Create User</button>
 
         <?php if ($error): ?>

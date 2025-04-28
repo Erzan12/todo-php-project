@@ -10,34 +10,42 @@ class User {
 
     public function create($name, $email) {
         //attempt to insert the new user
+        $query = "SELECT * FROM " . $this->table . " WHERE email = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        if ($result->num_rows > 0) {
+            // if the email exists for a different user
+            return "The email is already taken. Please choose another one."; // return error message
+        }
+    
         $query = "INSERT INTO " . $this->table . " (name, email) VALUES (?, ?)";
         $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("ss",$name, $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
     
         if (!$stmt) {
             return "Prepare failed: " . $this->conn->error;
         }
     
         $stmt->bind_param("ss", $name, $email);
-    
-        try {
-            //attempt to execute the query
-            if ($stmt->execute()) {
-                $stmt->close(); //close after executing
-                return true; //successfully created
-            }
-        } catch (mysqli_sql_exception $e) {
-            //catch the exception for duplicate email entry (errno 1062)
-            if ($e->getCode() == 1062) {
+        
+        if ($stmt->execute()) {
+            $stmt->close(); //close after executing
+            return true; //successfully created
+        } else {
+            //handle duplicate email error
+            if ($stmt->errno == 1062) {
                 $stmt->close();
-                return "Email already exists!! Please try again!";
+                return "Email already exists. Please try again!";
             } else {
                 $stmt->close();
-                return "Error: " . $e->getMessage();
+                return "Error: " . $stmt->error;
             }
         }
-    
-        //default case, if no exceptions were thrown but still failed to execute
-        return "Error: " . $stmt->error;
     }
     
 
