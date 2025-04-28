@@ -18,3 +18,4 @@ class User {
 $user = new User("John Doe", " do.earljan@gmail.com");
 echo $user->getName();
 echo $user->getEmail();
+

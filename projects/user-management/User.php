@@ -9,7 +9,7 @@ class User {
     }
 
     public function create($name, $email) {
-        // Attempt to insert the new user
+        //attempt to insert the new user
         $query = "INSERT INTO " . $this->table . " (name, email) VALUES (?, ?)";
         $stmt = $this->conn->prepare($query);
     
@@ -20,23 +20,23 @@ class User {
         $stmt->bind_param("ss", $name, $email);
     
         try {
-            // Attempt to execute the query
+            //attempt to execute the query
             if ($stmt->execute()) {
-                $stmt->close(); // Close after executing
-                return true; // Successfully created
+                $stmt->close(); //close after executing
+                return true; //successfully created
             }
         } catch (mysqli_sql_exception $e) {
-            // Catch the exception for duplicate email entry (errno 1062)
+            //catch the exception for duplicate email entry (errno 1062)
             if ($e->getCode() == 1062) {
                 $stmt->close();
-                return "Email already exists. Please try again!";
+                return "Email already exists!! Please try again!";
             } else {
                 $stmt->close();
                 return "Error: " . $e->getMessage();
             }
         }
     
-        // Default case, if no exceptions were thrown but still failed to execute
+        //default case, if no exceptions were thrown but still failed to execute
         return "Error: " . $stmt->error;
     }
     
