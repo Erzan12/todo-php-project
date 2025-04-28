@@ -8,15 +8,14 @@ services:
       - "8080:80"
     volumes:
       - ./projects:/var/www/html
-    depends_on:
+    depends_on: 
       - db
-  
   db:
-    image: mysql:5.7
+    image: mysql:8
     container_name: mysql-db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root 
+      MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: user_management
       MYSQL_USER: devuser
       MYSQL_PASSWORD: devpass
