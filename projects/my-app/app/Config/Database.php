@@ -24,28 +24,7 @@ class Database extends Config
      *
      * @var array<string, mixed>
      */
-    public $default = [
-        'DSN'      => '',
-        'hostname' => 'db',
-        'username' => 'devuser',
-        'password' => 'devpass',
-        'database' => 'my_App',
-        'DBDriver' => 'MySQLi',
-        'DBPrefix' => '',
-        'pConnect' => false,
-        'DBDebug'  => (ENVIRONMENT !== 'production'),
-        'cacheOn'  => false,
-        'cacheDir' => '',
-        'charset'  => 'utf8mb4',
-        'DBCollat' => 'utf8mb4_general_ci',
-        'swapPre'  => '',
-        'encrypt'  => false,
-        'compress' => false,
-        'strictOn' => false,
-        'failover' => [],
-        'port'     => 3306,
-    ];
-
+    
     //    /**
     //     * Sample database connection for SQLite3.
     //     *
@@ -164,7 +143,7 @@ class Database extends Config
         'password'    => '',
         'database'    => ':memory:',
         'DBDriver'    => 'SQLite3',
-        'DBPrefix'    => 'db_',  // Needed to ensure we're working correctly with prefixes live. DO NOT REMOVE FOR CI DEVS
+        'DBPrefix'    => 'db_',
         'pConnect'    => false,
         'DBDebug'     => true,
         'charset'     => 'utf8',
@@ -188,9 +167,28 @@ class Database extends Config
     {
         parent::__construct();
 
-        // Ensure that we always set the database group to 'tests' if
-        // we are currently running an automated test suite, so that
-        // we don't overwrite live data on accident.
+        // Set default connection values
+        $this->default = [
+            'DSN'      => '',
+            'hostname' => env('database.default.hostname', 'localhost'),
+            'username' => env('database.default.username', 'root'),
+            'password' => env('database.default.password', ''),
+            'database' => env('database.default.database', 'test'),
+            'DBDriver' => env('database.default.DBDriver', 'MySQLi'),
+            'DBPrefix' => env('database.default.DBPrefix', ''),
+            'pConnect' => false,
+            'DBDebug'  => (ENVIRONMENT !== 'production'),
+            'charset'  => 'utf8',
+            'DBCollat' => 'utf8_general_ci',
+            'swapPre'  => '',
+            'encrypt'  => false,
+            'compress' => false,
+            'strictOn' => false,
+            'failover' => [],
+            'port'     => 3306,
+        ];
+
+        // Use 'tests' group if running tests
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
         }
