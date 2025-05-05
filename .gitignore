@@ -1,2 +1,6 @@
 # Ignore sensitive environment variables
 .env
+/projects/my-app/.env
+/prjects/task-api/.env
+/prjects/simple-jwt/.env
+.gitignore

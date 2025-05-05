@@ -7,7 +7,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./projects:/var/www/html
+      - ./projects/task-api:/var/www/html
     depends_on: 
       - db
 

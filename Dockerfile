@@ -1,14 +1,31 @@
 FROM php:8.2-apache
 
-#INSTALL PHP EXTENSIONS
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    unzip \
+    git \
+    curl \
+    zip \
+    libzip-dev \
+    libxml2-dev \
+    libicu-dev \
+    libonig-dev \
+    pkg-config \
+    libssl-dev \
+    build-essential
 
-#ENABLE APACHE MOD_REWRITE
-RUN a2enmod rewrite 
+# Install PHP extensions
+RUN docker-php-ext-install mysqli pdo pdo_mysql mbstring intl xml zip
 
-#OPTIONAL: Custom Apache Config
+# Enable Apache mod_rewrite
+RUN a2enmod rewrite
+
+# Install Composer globally
+RUN curl -sS https://getcomposer.org/installer | php && \
+    mv composer.phar /usr/local/bin/composer
+
+# Copy Apache config
 COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
-#SET WORKING DIRECTORY
+# Set working directory
 WORKDIR /var/www/html
-
